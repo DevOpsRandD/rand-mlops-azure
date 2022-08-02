@@ -7,7 +7,7 @@ on:
     branches:
       - main
 jobs: 
-  Explore-GitHub-Actions:
+  MLOps-GitHub-Actions:
     runs-on: [self-hosted, local-linux]
     steps:
 
