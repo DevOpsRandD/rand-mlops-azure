@@ -2,10 +2,10 @@ name: MLOps training
 on:
   push:
     branches:
-      - master-na
+      - main
   pull_request:
     branches:
-      - master-na
+      - main
 jobs: 
   Explore-GitHub-Actions:
     runs-on: [self-hosted, local-linux]
