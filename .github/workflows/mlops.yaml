@@ -16,18 +16,15 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-
+    
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        ref: main
+    
     - name: Azure CLI script Show
-      uses: azure/CLI@v1
-      with:
-        azcliversion: 2.30.0
-        inlineScript: |
-          az account show
-
-    - name: Azure CLI script Logout
-      uses: azure/CLI@v1
-      with:
-        inlineScript: |
-          az logout
-          az cache purge
-          az account clear
+      run: |
+        az account show
+        az logout
+        az cache purge
+        az account clear
