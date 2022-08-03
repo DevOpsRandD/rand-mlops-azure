@@ -9,6 +9,7 @@ on:
 jobs: 
   MLOps-GitHub-Actions:
     runs-on: [self-hosted, local-linux]
+    container: mcr.microsoft.com/mlops/python:latest
     steps:
 
     - name: Azure Login
