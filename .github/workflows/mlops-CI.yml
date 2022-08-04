@@ -73,10 +73,7 @@ jobs:
         export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
         python -m ml_service.pipelines.run_train_pipeline --output_pipeline_id_file "pipeline_id.txt" --skip_train_execution "false"
         # Set AMLPIPELINEID variable for next AML Pipeline task in next job
-        echo 'AMLPIPELINEID<<EOF' >> $GITHUB_ENV
-        cat pipeline_id.txt >> $GITHUB_ENV
-        echo 'EOF' >> $GITHUB_ENV
-
+        
     - name: 'Determine if evaluation succeeded and new model is registered (CLI)'
       run: |
         set -e # fail on error
