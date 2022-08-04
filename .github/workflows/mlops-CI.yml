@@ -67,14 +67,18 @@ jobs:
       run: |
         cp .env.example .env
 
-    - name: Get Pipeline ID and Invoke ML pipeline 
+    - name: Invoke ML pipeline 
       run: |
         set -e # fail on error
         export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
         python -m ml_service.pipelines.run_train_pipeline --output_pipeline_id_file "pipeline_id.txt" --skip_train_execution "false"
         # Set AMLPIPELINEID variable for next AML Pipeline task in next job
-        
-    - name: 'Determine if evaluation succeeded and new model is registered (CLI)'
+
+    - name: 'Install AzureML CLI'
+      run: |
+        az extension add --source https://azurecliext.blob.core.windows.net/release/azure_cli_ml-1.27.0-py3-none-any.whl --yes
+
+    - name: 'Determine if evaluation succeeded and new model is registered'
       run: |
         set -e # fail on error
         # Get the model using the build ID tag
