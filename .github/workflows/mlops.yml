@@ -10,11 +10,11 @@ jobs:
   
   Init_Workflow:
     runs-on: [self-hosted, local-linux]
-    container: mcr.microsoft.com/mlops/python:latest
     steps:
     - name: Set the value
       id: step_one
       run: |
+        echo "$action_state" # This will output 'NA'
         echo "action_state=yellow" >> $GITHUB_ENV  
 
 
