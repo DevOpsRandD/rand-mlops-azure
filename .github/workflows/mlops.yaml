@@ -22,4 +22,12 @@ jobs:
       with:
         ref: main
     
-
+    - name: Azure CLI script Show
+      run: |
+        az account show
+    
+    - name: Azure CLI script Log out
+      run: |
+        az logout
+        az cache purge
+        az account clear
