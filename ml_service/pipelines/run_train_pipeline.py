@@ -15,7 +15,8 @@ def main():
     )
     parser.add_argument(
         "--skip_train_execution",
-        action="store_true",
+        type=str,
+        default="true",
         help=("Do not trigger the execution. "
               "Use this in Azure DevOps when using a server job to trigger")
     )
@@ -53,7 +54,7 @@ def main():
             with open(args.output_pipeline_id_file, "w") as out_file:
                 out_file.write(published_pipeline.id)
 
-        if(args.skip_train_execution is False):
+        if(args.skip_train_execution.lower() == "false"):
             pipeline_parameters = {"model_name": e.model_name}
             tags = {"BuildId": e.build_id}
             if (e.build_uri is not None):

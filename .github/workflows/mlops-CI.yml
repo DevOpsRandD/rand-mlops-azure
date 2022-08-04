@@ -47,3 +47,45 @@ jobs:
         export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
         # Invoke the Python building and publishing a training pipeline
         python -m ml_service.pipelines.diabetes_regression_build_train_pipeline
+
+  Trigger_AML_Pipeline:
+    needs: Model_CI_Pipeline
+    runs-on: [self-hosted, local-linux]
+    container: mcr.microsoft.com/mlops/python:latest
+    steps:
+
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Get Pipeline ID and Invoke ML pipeline 
+      run: |
+        set -e # fail on error
+        export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+        python -m ml_service.pipelines.run_train_pipeline --output_pipeline_id_file "pipeline_id.txt" --skip_train_execution "false"
+        # Set AMLPIPELINEID variable for next AML Pipeline task in next job
+        echo 'AMLPIPELINEID<<EOF' >> $GITHUB_ENV
+        cat pipeline_id.txt >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+
+    -name: 'Determine if evaluation succeeded and new model is registered (CLI)'
+      run: |
+        set -e # fail on error
+        # Get the model using the build ID tag
+        FOUND_MODEL=$(az ml model list -g $(RESOURCE_GROUP) --workspace-name $(WORKSPACE_NAME) --tag BuildId="001" --query '[0]')
+        
+        # If the variable is empty, print and fail
+        [[ -z "$FOUND_MODEL" ]] && { echo "Model was not registered for this run." ; exit 1; }
+        # Write to a file
+        echo $FOUND_MODEL >model.json
+
+    - name: Upload model artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: drop/model
+        path: model.json  
+        retention-days: 10
