@@ -73,7 +73,7 @@ jobs:
         cat pipeline_id.txt >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
 
-    -name: 'Determine if evaluation succeeded and new model is registered (CLI)'
+    - name: 'Determine if evaluation succeeded and new model is registered (CLI)'
       run: |
         set -e # fail on error
         # Get the model using the build ID tag
