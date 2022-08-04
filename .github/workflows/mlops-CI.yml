@@ -9,7 +9,6 @@ on:
 jobs: 
   
   Model_CI_Pipeline:
-    needs: Init_Workflow
     runs-on: [self-hosted, local-linux]
     container: mcr.microsoft.com/mlops/python:latest
     steps:
