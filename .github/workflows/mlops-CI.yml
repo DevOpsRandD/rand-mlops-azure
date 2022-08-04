@@ -37,5 +37,13 @@ jobs:
     - name: Upload coverage results
       uses: actions/upload-artifact@v3
       with:
-        name: homework
+        name: drop
         path: coverage.xml  
+        retention-days: 1
+
+    - name: 'Publish Azure Machine Learning Pipeline'
+      run: |
+        set -e # fail on error
+        export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+        # Invoke the Python building and publishing a training pipeline
+        python -m ml_service.pipelines.diabetes_regression_build_train_pipeline
