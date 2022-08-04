@@ -7,7 +7,20 @@ on:
     branches:
       - main
 jobs: 
-  MLOps-GitHub-Actions:
+  
+  Init_Workflow:
+    runs-on: [self-hosted, local-linux]
+    container: mcr.microsoft.com/mlops/python:latest
+    steps:
+    - name: Set the value
+      id: step_one
+      run: |
+        echo "action_state=yellow" >> $GITHUB_ENV  
+
+
+
+  Model_CI_Pipeline:
+    needs: Init_Workflow
     runs-on: [self-hosted, local-linux]
     container: mcr.microsoft.com/mlops/python:latest
     steps:
@@ -22,11 +35,6 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-    - name: Set the value
-      id: step_one
-      run: |
-        echo "action_state=yellow" >> $GITHUB_ENV   
-
     - name: Use the value
       id: step_two
       run: |
@@ -46,3 +54,4 @@ jobs:
         az logout
         az cache purge
         az account clear
+
