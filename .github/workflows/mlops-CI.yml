@@ -48,6 +48,7 @@ jobs:
         # Invoke the Python building and publishing a training pipeline
         python -m ml_service.pipelines.diabetes_regression_build_train_pipeline
 
+
   Trigger_AML_Pipeline:
     needs: Model_CI_Pipeline
     runs-on: [self-hosted, local-linux]
