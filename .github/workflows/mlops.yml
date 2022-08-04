@@ -12,16 +12,31 @@ jobs:
     container: mcr.microsoft.com/mlops/python:latest
     steps:
 
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        ref: main
+
     - name: Azure Login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-    - name: Checkout repo
-      uses: actions/checkout@v3
-      with:
-        ref: main
-    
+    - name: Set the value
+      id: step_one
+      run: |
+        echo "action_state=yellow" >> $GITHUB_ENV   
+
+    - name: Use the value
+      id: step_two
+      run: |
+        echo "${{ env.action_state }}" # This will output 'yellow'
+
+    - name: Use the value v2
+      id: step_two
+      run: |
+        echo "$action_state" # This will output 'yellow'
+
     - name: Azure CLI script Show
       run: |
         az account show
