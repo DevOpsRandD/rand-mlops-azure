@@ -63,6 +63,10 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Copy env.example to .env for testing
+      run: |
+        cp .env.example .env
+
     - name: Get Pipeline ID and Invoke ML pipeline 
       run: |
         set -e # fail on error
