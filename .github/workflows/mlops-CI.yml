@@ -77,7 +77,11 @@ jobs:
     - name: 'Install AzureML CLI'
       run: |
         version=$(az extension list | grep '"name": "azure-cli-ml"')
-        [[ -z "$version" ]] && { az extension add --source https://azurecliext.blob.core.windows.net/release/azure_cli_ml-1.27.0-py3-none-any.whl --yes;}
+        if [ -z "$version" ]
+        then
+          echo "Installing az ML CLI"
+          az extension add --source https://azurecliext.blob.core.windows.net/release/azure_cli_ml-1.27.0-py3-none-any.whl --yes
+        fi
 
     - name: 'Determine if evaluation succeeded and new model is registered'
       run: |
@@ -86,7 +90,11 @@ jobs:
         FOUND_MODEL=$(az ml model list -g ${{ secrets.RESOURCE_GROUP }} --workspace-name ${{ secrets.WORKSPACE_NAME }} --tag BuildId="001" --query '[0]')
         
         # If the variable is empty, print and fail
-        [[ -z "$FOUND_MODEL" ]] && { echo "Model was not registered for this run." ; exit 1; }
+        if [ -z "$version" ]
+        then
+          echo "Model was not registered for this run." 
+          exit 1
+        fi
         # Write to a file
         echo $FOUND_MODEL >model.json
 
