@@ -90,7 +90,7 @@ jobs:
         FOUND_MODEL=$(az ml model list -g ${{ secrets.RESOURCE_GROUP }} --workspace-name ${{ secrets.WORKSPACE_NAME }} --tag BuildId="001" --query '[0]')
         
         # If the variable is empty, print and fail
-        if [ -z "$version" ]
+        if [ -z "$FOUND_MODEL" ]
         then
           echo "Model was not registered for this run." 
           exit 1
