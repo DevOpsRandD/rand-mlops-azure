@@ -1,0 +1,40 @@
+name: MLOps CD
+on:
+  workflow_run:
+    workflows: ["MLOps training"]
+    types: [completed]
+    branches:
+      - "main"
+  workflow_dispatch:
+
+Model_CI_Pipeline:
+  runs-on: [self-hosted, local-linux]
+  if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  container: mcr.microsoft.com/mlops/python:latest
+  steps:
+
+  - name: Checkout repo
+    uses: actions/checkout@v3
+
+  - name: Azure Login
+    uses: azure/login@v1
+    with:
+      creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+  - name: Download artifact
+    uses: dawidd6/action-download-artifact@v2
+    with:
+      workflow: ${{ github.event.workflow_run.workflow_id }}
+      run_id: ${{ github.event.workflow_run.workflow_id }}
+      name: MLdrop
+
+  - name: Parse Json for Model Name and Version
+    run: |
+      # Print JSON
+      cat MLdrop/model.json | jq '.'
+      # Set model name and version variables
+      MODEL_NAME=$(jq -r '.name' <$(Build.SourcesDirectory)/bin/model/model.json)
+      MODEL_VERSION=$(jq -r '.version' <$(Build.SourcesDirectory)/bin/model/model.json)
+
+
+  
