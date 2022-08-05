@@ -7,8 +7,11 @@ on:
       - "main"
   workflow_dispatch:
 
+env:
+  ACI_DEPLOYMENT_NAME: mlops-test-randd
+
 jobs: 
-  Model_CI_Pipeline:
+  Model_CD_Pipeline:
     runs-on: [self-hosted, local-linux]
     # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     container: mcr.microsoft.com/mlops/python:latest
@@ -47,11 +50,6 @@ jobs:
         name: MLdrop
         path: MLdrop
 
-    - name: List items
-      run: |
-        ls
-        ls MLdrop
-
     - name: Parse Json for Model Name and Version
       run: |
         # Print JSON
@@ -68,6 +66,28 @@ jobs:
         echo "MODEL_NAME=$MODEL_NAME" >> $GITHUB_ENV
         echo "MODEL_VERSION=$MODEL_VERSION" >> $GITHUB_ENV
 
+    - name: 'Install AzureML CLI'
+      run: |
+        version=$(az extension list | grep '"name": "azure-cli-ml"')
+        if [ -z "$version" ]
+        then
+          echo "Installing az ML CLI"
+          az extension add --source https://azurecliext.blob.core.windows.net/release/azure_cli_ml-1.27.0-py3-none-any.whl --yes
+        fi
 
+    - name: Deploy to ACI
+      working-directory: 'diabetes_regression/scoring'
+      run: |
+        set -e # fail on error
+          
+        az ml model deploy --name $ACI_DEPLOYMENT_NAME --model '$MODEL_NAME:$MODEL_VERSION' \
+        --ic inference_config.yml \
+        --dc deployment_config_aci.yml \
+        -g $(RESOURCE_GROUP) --workspace-name $(WORKSPACE_NAME) \
+        --overwrite -v
 
-  
+    - name: Smoke test
+      run: |
+        set -e # fail on error
+        export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+        python -m ml_service.util.smoke_test_scoring_service --type ACI --service "$ACI_DEPLOYMENT_NAME"
