@@ -45,6 +45,7 @@ jobs:
       with:
         workflow: mlops-CI.yml
         name: MLdrop
+        path: MLdrop
 
     - name: List items
       run: |
