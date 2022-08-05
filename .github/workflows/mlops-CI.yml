@@ -3,9 +3,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - diabetes_regression/
+      - ml_service/pipelines/diabetes_regression_build_train_pipeline.py
+      - ml_service/pipelines/diabetes_regression_build_train_pipeline_with_r.py
+      - ml_service/pipelines/diabetes_regression_build_train_pipeline_with_r_on_dbricks.py
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 jobs: 
   
   Model_CI_Pipeline:
