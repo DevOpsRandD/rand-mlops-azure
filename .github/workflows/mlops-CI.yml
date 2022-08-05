@@ -77,7 +77,7 @@ jobs:
     - name: 'Install AzureML CLI'
       run: |
         version=$(az extension list | grep '"name": "azure-cli-ml"')
-        [[ -z "$a" ]] && { az extension add --source https://azurecliext.blob.core.windows.net/release/azure_cli_ml-1.27.0-py3-none-any.whl --yes;}
+        [[ -z "$version" ]] && { az extension add --source https://azurecliext.blob.core.windows.net/release/azure_cli_ml-1.27.0-py3-none-any.whl --yes;}
 
     - name: 'Determine if evaluation succeeded and new model is registered'
       run: |
