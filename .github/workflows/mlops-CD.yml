@@ -45,13 +45,18 @@ jobs:
         workflow: mlops-CI.yml
         name: MLdrop
 
+    - name: List items
+      run: |
+        ls
+        ls MLdrop
+
     - name: Parse Json for Model Name and Version
       run: |
         # Print JSON
         cat MLdrop/model.json | jq '.'
         # Set model name and version variables
-        MODEL_NAME=$(jq -r '.name' <$(Build.SourcesDirectory)/bin/model/model.json)
-        MODEL_VERSION=$(jq -r '.version' <$(Build.SourcesDirectory)/bin/model/model.json)
+        MODEL_NAME=$(jq -r '.name' MLdrop/model.json)
+        MODEL_VERSION=$(jq -r '.version' MLdrop/model.json)
 
         echo "Model Name: $MODEL_NAME"
         echo "Model Version: $MODEL_VERSION"
