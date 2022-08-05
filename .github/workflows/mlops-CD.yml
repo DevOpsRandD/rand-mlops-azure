@@ -65,8 +65,8 @@ jobs:
 
         # Set environment variables
 
-        echo $MODEL_NAME >> $GITHUB_ENV
-        echo $MODEL_VERSION >> $GITHUB_ENV
+        echo "MODEL_NAME=$MODEL_NAME" >> $GITHUB_ENV
+        echo "MODEL_VERSION=$MODEL_VERSION" >> $GITHUB_ENV
 
 
 
