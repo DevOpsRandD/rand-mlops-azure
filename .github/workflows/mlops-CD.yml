@@ -42,7 +42,7 @@ jobs:
       uses: dawidd6/action-download-artifact@v2
       if: ${{ github.event.workflow_run.conclusion == '' }}
       with:
-        workflow: 'MLOps training'
+        workflow: mlops-CI.yml
         name: MLdrop
 
     - name: Parse Json for Model Name and Version
@@ -57,6 +57,9 @@ jobs:
         echo "Model Version: $MODEL_VERSION"
 
         # Set environment variables
+
+        echo $MODEL_NAME >> $GITHUB_ENV
+        echo $MODEL_VERSION >> $GITHUB_ENV
 
 
 
