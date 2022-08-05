@@ -101,6 +101,6 @@ jobs:
     - name: Upload model artifact
       uses: actions/upload-artifact@v3
       with:
-        name: drop/model
+        name: MLdrop
         path: model.json  
         retention-days: 10
