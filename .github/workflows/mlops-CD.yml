@@ -10,7 +10,7 @@ on:
 jobs: 
   Model_CI_Pipeline:
     runs-on: [self-hosted, local-linux]
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     container: mcr.microsoft.com/mlops/python:latest
     steps:
 
