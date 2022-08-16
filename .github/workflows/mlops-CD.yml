@@ -2,7 +2,7 @@ name: MLOps CD
 on:
   workflow_run:
     workflows: ["MLOps training"]
-    types: [requested, completed]
+    types: [completed]
     branches:
       - "main"
   workflow_dispatch:
