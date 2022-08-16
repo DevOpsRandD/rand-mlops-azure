@@ -9,7 +9,7 @@ on:
 
 env:
   ACI_DEPLOYMENT_NAME: mlops-test-randd
-  RESOURCE_GROUP: mlops-RG
+  RESOURCE_GROUP: rgMLOps
   WORKSPACE_NAME: main-ml-workspace
 
 jobs: 
